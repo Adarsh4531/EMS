@@ -181,7 +181,7 @@ const attendenceReminderCron = inngest.createFunction(
       })
     }
     
-    return {totalActive:activeEmployees.length,onLeave:onLeaveIds.length,checkedIn:checkedInIds.length,absent:absentEmployees.length}
+    return {totalActive:activeemployees.length,onLeave:onLeaveIds.length,checkedIn:checkedInIds.length,absent:absentEmployees.length}
 
   }
   
