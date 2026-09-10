@@ -8,7 +8,7 @@ import {inngest} from "../inngest/index.js"
 export const createLeave = async (req,res) => {
     try{
       const session = req.session
-      const employee = await employee.findOne({userId: session.userId})
+      const employee = await Employee.findOne({userId: session.userId})
       if(!employee) return res.status(404).json({error:"employee not found"})
       if(employee.isDeleted){
         return res.status(403).json({error:"Your account is deactivated"})
@@ -38,6 +38,7 @@ export const createLeave = async (req,res) => {
         reason,
         status:"PENDING",
       })
+      try{
 
       await inngest.send({
         name:"leave/pending",
@@ -45,12 +46,16 @@ export const createLeave = async (req,res) => {
           leaveApplicationId:leave._id,
         }
       })
+    }catch(inngestErr){
+      console.log("Inngest Error",inngestErr)
+    }
 
       return res.json({success:true,date:leave})
 
     }catch(err){
+      console.log(err)
 
-      return res.status(500).json({error:"Failed"})
+      return res.status(500).json({error:  "Failed" })
 
     }
 }
@@ -62,12 +67,13 @@ export const getLeaves = async (req,res) => {
 
   try{
     const session = req.session
+    
     const isAdmin = session.role === 'ADMIN'
-    if(!isAdmin){
+    if(isAdmin){
       const status = req.query.status
       const where = status ?{status} : {}
       const leaves = await LeaveApplication.find(where).populate("employeeId").sort({createdAt:-1}) 
-      const data = leaves.map(()=>{
+      const data = leaves.map((l)=>{
         const obj = l.toObject()
         return {
           ...obj,

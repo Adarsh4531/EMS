@@ -9,8 +9,8 @@ export const getDashboard = async (req,res) => {
   try{
     const session = req.session
     if(session.role === 'ADMIN'){
-      const [totalEmployees,totalAttendence,pendingLeaves] = await Promise.all([
-        Employee.Employee.countDocuments({isDeleted: {$ne:true}}),
+      const [totalEmployees,todayAttendance,pendingLeaves] = await Promise.all([
+        Employee.countDocuments({isDeleted: {$ne:true}}),
         Attendence.countDocuments({
           date: {
             $gte: new Date(new Date().setHours(0, 0, 0, 0)),
@@ -24,7 +24,7 @@ export const getDashboard = async (req,res) => {
         role:"ADMIN",
         totalEmployees,
         totalDepartments: DEPARTMENTS.length,
-        todayAttendence,
+        todayAttendance,
         pendingLeaves
       })
 
@@ -34,14 +34,14 @@ export const getDashboard = async (req,res) => {
         if(!employee) return res.status(404).json({error:"Employee not found"})
 
           const today = new Date()
-          const[currentMonthAttendence,pendingLeaves,latestPayslips] = await promise.all([
+          const[currentMonthAttendence,pendingLeaves,latestPayslips] = await Promise.all([
             Attendence.countDocuments({
               employeeId:employee._id,
               date: {
               $gte: new Date(today.getFullYear(),today.getMonth(),1),
               $lt: new Date(today.getFullYear(),today.getMonth()+1,1),
           }
-            }).
+            }),
             LeaveApplication.countDocuments({
               employeeId:employee._id,
               status:"PENDING",
@@ -62,7 +62,7 @@ export const getDashboard = async (req,res) => {
     
 
   }catch(err){
-    console.error('Dashboard error',error)
+    console.error('Dashboard error',err)
     return res.status(500).json({error:"Failed to fetch dashboard data"})
   }
   

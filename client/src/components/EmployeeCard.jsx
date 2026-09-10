@@ -1,5 +1,7 @@
 import {  Pencil, Trash2 } from 'lucide-react'
 import React from 'react'
+import api from '../api/axios'
+import toast from 'react-hot-toast'
 
 
 
@@ -9,6 +11,13 @@ const EmployeeCard = ({employee,onDelete,onEdit}) => {
   const handleDelete = async ()=>{
     if(!confirm("Are you sure to delete"))
       return
+    try{
+        await api.delete(`/employees/${employee.id}`)
+        onDelete()
+    }catch(err){
+      toast.error(err.response?.data?.error || err.message)
+
+    }
   }
   return (
     <div className='group relative card card-hover overflow-hidden'>

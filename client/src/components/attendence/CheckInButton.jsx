@@ -1,19 +1,26 @@
 import { Loader2, LogIn, LogOut } from 'lucide-react'
 import React, { useState } from 'react'
+import api from '../../api/axios'
+import toast from 'react-hot-toast'
 
-const CheckInButton = ({todayRecord, onAction}) => {
+const CheckInButton = ({todaysRecord, onAction}) => {
 
   const [loading, setloading] = useState(false)
 
   const handleAttendence = async () =>{
     setloading(true)
-    setTimeout(() => {
-      setloading(false)
+    try{
+      await api.post('/attendence')
       onAction()
-    }, 1000)
+
+    }catch(err){
+      toast.error(err.response?.data?.error || err.message)
+
+    }
+    setloading(false)
   }
 
-  if(todayRecord?.checkOut){
+  if(todaysRecord?.checkOut){
     return (
       <div className='flex flex-col items-center justify-center p-8 bg-slate-50 rounded-2xl border border-slate-200'>
         <h3 className='text-lg font-bold text-slate-900'>Work Day Completed</h3>
@@ -22,7 +29,7 @@ const CheckInButton = ({todayRecord, onAction}) => {
     )
   }
 
-  const isCheckedIn = !!todayRecord?.isCheckedIn
+  const isCheckedIn = !!todaysRecord?.checkIn
 
   return (
     <div className='absolute bottom-4 right-4 flex flex-col z-1'>

@@ -35,15 +35,19 @@ export const getEmployees = async (req, res) => {
 
 export const createEmployee = async (req, res) => {
   try{
-    const {firstName, lastName, email, department,basicSalary,allowance,deductions,joinDate,password,role,bio} = req.body;
+    const {firstName, lastName, email, department,basicSalary,allowance,deductions,joinDate,password,role,bio,phone,position} = req.body;
+  
+
 
     if(!firstName || !lastName || !email || !password ){
       return res.status(400).json({ message: 'Missing required fields' });
     }
-
+    
     const hashed = await bcrypt.hash(password, 10);
+   
 
     const user = await User.create({email,password:hashed,role:role || "EMPLOYEE"})
+    
 
     const employee = await Employee.create({
       userId: user._id,
@@ -79,7 +83,7 @@ export const createEmployee = async (req, res) => {
 export const updateEmployee = async (req, res) => {
     try{
     const {id} = req.params;
-    const {firstName, lastName, email, department,basicSalary,allowance,deductions,password,role,bio,employmentStatus} = req.body;
+    const {firstName, lastName, email, department,basicSalary,allowance,deductions,password,role,bio,employmentStatus,phone,position} = req.body;
 
    const employee = await Employee.findById(id);
 

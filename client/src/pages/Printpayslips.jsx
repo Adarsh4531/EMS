@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import {useParams} from 'react-router-dom'
 import Loading from '../components/Loading'
 import { dummyPayslipData } from '../assets/assets'
+import api from '../api/axios'
+import toast from 'react-hot-toast'
 
 const Printpayslips = () => {
   const {id} = useParams()
@@ -11,10 +13,8 @@ const Printpayslips = () => {
 
 
   useEffect(()=>{
-    setPayslip(dummyPayslipData.find((slip)=>slip._id === id))
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000);
+    api.get(`/payslips/${id}`)
+      .then((res)=> setPayslip(res.data)).catch(console.error).finally(()=> setLoading(false))
   },[id])
 
   if(loading) return <Loading />
