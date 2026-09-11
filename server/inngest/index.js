@@ -55,7 +55,7 @@ const autoCheckOut = inngest.createFunction(
       attendence.checkOut = new Date(attendence.checkIn).getTime() +4*60*60*1000
       attendence.workingHours = 4
       attendence.status = "LATE"
-      attendence.daytype = "HALF DAY"
+      attendence.dayType = "HALF DAY"
       await attendence.save()
     }
 
