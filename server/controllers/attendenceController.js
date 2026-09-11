@@ -55,10 +55,10 @@ export const clockInOut = async (req, res) => {
           //Compute working hrs and day type
 
           const workingHours = parseFloat(diffHours.toFixed(2))
-          let dayType = "Half Day"
-          if(workingHours>=8) dayType = "Full Day"
+          let dayType = "half Day"
+          if(workingHours>=8) dayType = "full Day"
           else if(workingHours>=6) dayType = "Three Quarter Day"
-          else if (workingHours>=4) dayType = "Half Day"
+          else if (workingHours>=4) dayType = "half Day"
           else dayType = 'Short Day'
 
           existing.workingHours = workingHours
@@ -74,7 +74,7 @@ export const clockInOut = async (req, res) => {
 
   }catch(err){
 
-    console.error("Attendence Error",error)
+    console.error("Attendence Error",err)
     return res.status(500).json({error:"Operation failed"})
 
   
