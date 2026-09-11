@@ -153,44 +153,33 @@ const attendenceReminderCron = inngest.createFunction(
 
     //Step-6: Send email to absent employees
 
-    // if(absentEmployees.length>0){
-    //   await step.run("send-reminder-emails",async()=>{
-    //     const emailPromises = absentEmployees.map((emp)=>{
-    //       // Send email
+    if(absentEmployees.length>0){
+      await step.run("send-reminder-emails",async()=>{
+        const emailPromises = absentEmployees.map((emp)=>{
+          // Send email
 
-    //       sendEmail({
-    //         to:emp.email,
-    //         subject:"Attendance Reminder",
-    //         body:`
-    //                         <div style="max-width: 600px; font-family: Arial, sans-serif;">
-    //                             <h2>Hi ${emp.firstName}, 👋</h2>
-    //                             <p style="font-size: 16px;">We noticed you haven't marked your attendance yet today.</p>
-    //                             <p style="font-size: 16px;">The deadline was <strong>11:30 AM</strong> and your attendance is still missing.</p>
-    //                             <p style="font-size: 16px;">Please check in as soon as possible or contact your admin if you're facing any issues.</p>
-    //                             <br />
-    //                             <p style="font-size: 14px; color: #666;">Department: ${emp.department}</p>
-    //                             <br />
-    //                             <p style="font-size: 16px;">Best Regards,</p>
-    //                             <p style="font-size: 16px;"><strong>QuickEMS</strong></p>
-    //                         </div>
-    //                     `
-    //       })
-    //     })
-    //     await Promise.all(emailPromises)
-    //     return{emailsSent: absentEmployees.length}
-    //   })
-    // }
-
-    await step.run("test-email", async () => {
-  return await sendEmail({
-    to: 'adarshsingh4531@gmail.com',
-    subject: "EMS Test Email",
-    body: `
-      <h2>EMS Email Test</h2>
-      <p>This is a test email from QuickEMS.</p>
-    `
-  });
-});
+          return sendEmail({
+            to:emp.email,
+            subject:"Attendance Reminder",
+            body:`
+                            <div style="max-width: 600px; font-family: Arial, sans-serif;">
+                                <h2>Hi ${emp.firstName}, 👋</h2>
+                                <p style="font-size: 16px;">We noticed you haven't marked your attendance yet today.</p>
+                                <p style="font-size: 16px;">The deadline was <strong>11:30 AM</strong> and your attendance is still missing.</p>
+                                <p style="font-size: 16px;">Please check in as soon as possible or contact your admin if you're facing any issues.</p>
+                                <br />
+                                <p style="font-size: 14px; color: #666;">Department: ${emp.department}</p>
+                                <br />
+                                <p style="font-size: 16px;">Best Regards,</p>
+                                <p style="font-size: 16px;"><strong>QuickEMS</strong></p>
+                            </div>
+                        `
+          })
+        })
+        await Promise.all(emailPromises)
+        return{emailsSent: absentEmployees.length}
+      })
+    }
     
     return {totalActive:activeemployees.length,onLeave:onLeaveIds.length,checkedIn:checkedInIds.length,absent:absentEmployees.length}
 
