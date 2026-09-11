@@ -183,7 +183,7 @@ const attendenceReminderCron = inngest.createFunction(
 
     await step.run("test-email", async () => {
   return await sendEmail({
-    to: "EMPLOYEE_EMAIL_HERE",
+    to: 'adarshsingh4531@gmail.com',
     subject: "EMS Test Email",
     body: `
       <h2>EMS Email Test</h2>
